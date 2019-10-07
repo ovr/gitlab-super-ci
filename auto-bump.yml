@@ -24,50 +24,40 @@ stages:
   - git config --global user.name "${BOT_GIT_NAME}"
   - git config --global user.email "${BOT_GIT_EMAIL}"
 
-  - git clone git@gitlab.com:pdcst/client.git
-  - cd client
+  - git remote set-url --push origin "${CI_PUSH_REPO}"
 
-major-release:
+.auto_release: &auto_release_template
   stage: release
   image: registry.gitlab.com/lowl/node-testing:latest
+  variable:
+    CI_PUSH_REPO: "git clone git@gitlab.com:pdcst/client.git"
   before_script: *init_git_bot
+  only:
+    - master
+  when: manual
+  tags:
+    - docker
+
+major-release:
+  <<: *auto_release_template
   script:
     - npm version major
     #
     - git push origin master
     - git push origin --tags
-  only:
-    - master
-  when: manual
-  tags:
-    - docker
 
 minor-release:
-  stage: release
-  image: registry.gitlab.com/lowl/node-testing:latest
-  before_script: *init_git_bot
+  <<: *auto_release_template
   script:
     - npm version minor
     #
     - git push origin master
     - git push origin --tags
-  only:
-    - master
-  when: manual
-  tags:
-    - docker
 
-patch-release:
-  stage: release
-  image: registry.gitlab.com/lowl/node-testing:latest
-  before_script: *init_git_bot
+minor-release:
+  <<: *auto_release_template
   script:
     - npm version patch
     #
     - git push origin master
     - git push origin --tags
-  only:
-    - master
-  when: manual
-  tags:
-    - docker

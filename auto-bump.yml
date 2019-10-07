@@ -30,7 +30,7 @@ stages:
   stage: release
   image: registry.gitlab.com/lowl/node-testing:latest
   variable:
-    CI_PUSH_REPO: "git clone git@gitlab.com:pdcst/client.git"
+    CI_PUSH_REPO: "git@gitlab.com:pdcst/client.git"
   before_script: *init_git_bot
   only:
     - master

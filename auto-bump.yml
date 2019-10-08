@@ -29,7 +29,7 @@ stages:
 .auto_release: &auto_release_template
   stage: release
   image: registry.gitlab.com/lowl/node-testing:latest
-  variable:
+  variables:
     CI_PUSH_REPO: "git@gitlab.com:pdcst/client.git"
   before_script: *init_git_bot
   only:
@@ -54,7 +54,7 @@ minor-release:
     - git push origin master
     - git push origin --tags
 
-minor-release:
+patch-release:
   <<: *auto_release_template
   script:
     - npm version patch
